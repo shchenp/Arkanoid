@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 public class PlayerController : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class PlayerController : MonoBehaviour
     
     private InputHandler _inputHandler;
     
-    private void Awake()
+    [Inject]
+    private void Construct()
     {
         _inputHandler = new InputHandler();
     }

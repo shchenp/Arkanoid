@@ -6,4 +6,9 @@ public class InputHandler
     {
         return new Vector3(Input.GetAxisRaw("Horizontal"), 0, 0);
     }
+
+    public bool IsSpacePressed()
+    {
+        return Input.GetKeyDown(KeyCode.Space);
+    }
 }

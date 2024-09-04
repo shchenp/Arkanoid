@@ -1,4 +1,5 @@
 using UnityEngine;
+using VContainer;
 
 public class BallController : MonoBehaviour
 {
@@ -7,6 +8,13 @@ public class BallController : MonoBehaviour
     private Vector3 _initialPosition;
     private Rigidbody2D _rigidbody;
     private bool _isGameStarted;
+    private InputHandler _inputHandler;
+
+    [Inject]
+    private void Construct()
+    {
+        _inputHandler = new InputHandler();
+    }
 
     private void Awake()
     {
@@ -18,7 +26,7 @@ public class BallController : MonoBehaviour
 
     private void Update()
     {
-        if (!_isGameStarted && Input.GetKeyDown(KeyCode.Space))
+        if (!_isGameStarted && _inputHandler.IsSpacePressed())
         {
             StartGame();
         }
