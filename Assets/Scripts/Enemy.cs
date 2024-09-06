@@ -1,19 +1,29 @@
+using MessagePipe;
 using UnityEngine;
-using UnityEngine.Events;
+using VContainer;
 
 public class Enemy : MonoBehaviour
 {
-    public UnityEvent OnEnemyDeath;
-    
     [SerializeField] private int _health;
+    
+    private IPublisher<EnemyDiedMessage> _enemyDiedPublisher;
+
+    [Inject]
+    private void Construct(IPublisher<EnemyDiedMessage> enemyDiedPublisher)
+    {
+        _enemyDiedPublisher = enemyDiedPublisher;
+    }
 
     private void OnCollisionEnter2D(Collision2D other)
     {
         if (--_health <= 0)
         {
             gameObject.SetActive(false);
-            
-            OnEnemyDeath?.Invoke();
         }
+    }
+
+    private void OnDisable()
+    {
+        _enemyDiedPublisher.Publish(new EnemyDiedMessage());
     }
 }
