@@ -12,7 +12,7 @@ public class PlayerStats : MonoBehaviour
     private int _score;
     
     private IDisposable _enemyDiedSubscription;
-    private IDisposable _outOfBoundsSubscriber;
+    private IDisposable _outOfBoundsSubscription;
     private IPublisher<ScoreUpdatedMessage> _scorePublisher;
     private IPublisher<LivesUpdatedMessage> _livesPublisher;
 
@@ -23,7 +23,7 @@ public class PlayerStats : MonoBehaviour
         IPublisher<LivesUpdatedMessage> livesPublisher)
     {
         _enemyDiedSubscription = enemyDiedSubscriber.Subscribe(message => UpdateScore(message.Points));
-        _outOfBoundsSubscriber = outOfBoundsSubscriber.Subscribe(_ => DecreaseLives());
+        _outOfBoundsSubscription = outOfBoundsSubscriber.Subscribe(_ => DecreaseLives());
         
         _scorePublisher = scorePublisher;
         _livesPublisher = livesPublisher;
@@ -56,6 +56,6 @@ public class PlayerStats : MonoBehaviour
     private void OnDestroy()
     {
         _enemyDiedSubscription?.Dispose();
-        _outOfBoundsSubscriber?.Dispose();
+        _outOfBoundsSubscription?.Dispose();
     }
 }

@@ -1,7 +1,6 @@
 public static class GlobalConstants
 {
     public const string PLAYER_TAG = "Player";
-    public const string PROJECTILE_TAG = "Projectile";
     public const string OUTER_BOUND = "OuterBound";
 
     public const string MAIN_MENU_SCENE_NAME = "MainMenu";
