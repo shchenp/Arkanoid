@@ -1,3 +1,6 @@
+using System;
+using MessagePipe;
+using Messages;
 using UnityEngine;
 using VContainer;
 
@@ -9,16 +12,25 @@ public class BallController : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private bool _isGameStarted;
     private InputHandler _inputHandler;
+    
+    private IParent _parent;
+    private IPublisher<OutOfBoundsMessage> _outPublisher;
+    private IDisposable _subscription;
 
     [Inject]
-    private void Construct()
+    private void Construct(IParent parent, IPublisher<OutOfBoundsMessage> outPublisher,
+        ISubscriber<LivesUpdatedMessage> livesSubscriber)
     {
         _inputHandler = new InputHandler();
+        _outPublisher = outPublisher;
+        _subscription = livesSubscriber.Subscribe(message => TryResetPosition(message.Lives));
+
+        _parent = parent;
     }
 
     private void Awake()
     {
-        _initialPosition = transform.position;
+        _initialPosition = transform.localPosition;
         
         _rigidbody = GetComponent<Rigidbody2D>();
         _rigidbody.isKinematic = true;
@@ -37,6 +49,20 @@ public class BallController : MonoBehaviour
         transform.SetParent(null);
         _isGameStarted = true;
         _rigidbody.isKinematic = false;
+    }
+
+    private void TryResetPosition(int lives)
+    {
+        if (lives > 0)
+        {
+            _rigidbody.velocity = new Vector2(0, 0);
+        
+            transform.SetParent(_parent.GetTransform());
+            transform.localPosition = _initialPosition;
+        
+            _isGameStarted = false;
+            _rigidbody.isKinematic = true;   
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -59,5 +85,18 @@ public class BallController : MonoBehaviour
         var newDirection = new Vector2(newDirectionX, 1).normalized;
 
         _rigidbody.velocity = newDirection * _speed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if(other.CompareTag(GlobalConstants.OUTER_BOUND))
+        {
+            _outPublisher.Publish(new OutOfBoundsMessage());
+        }
+    }
+
+    private void OnDestroy()
+    {
+        _subscription?.Dispose();
     }
 }

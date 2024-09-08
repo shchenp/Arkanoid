@@ -1,10 +1,12 @@
 using MessagePipe;
+using Messages;
 using UnityEngine;
 using VContainer;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private int _health;
+    [SerializeField] private int _points;
     
     private IPublisher<EnemyDiedMessage> _enemyDiedPublisher;
 
@@ -24,6 +26,6 @@ public class Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        _enemyDiedPublisher.Publish(new EnemyDiedMessage());
+        _enemyDiedPublisher.Publish(new EnemyDiedMessage(_points));
     }
 }

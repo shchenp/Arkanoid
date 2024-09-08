@@ -1,7 +1,7 @@
 using UnityEngine;
 using VContainer;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IParent
 {
     [SerializeField] private float _speed;
     [SerializeField] private float _leftBorderX;
@@ -21,5 +21,10 @@ public class PlayerController : MonoBehaviour
         
         nextPosition.x = Mathf.Clamp(nextPosition.x, _leftBorderX, _rightBorderX);
         transform.position = nextPosition;
+    }
+
+    Transform IParent.GetTransform()
+    {
+        return transform;
     }
 }
