@@ -1,4 +1,5 @@
 using System;
+using Interfaces;
 using MessagePipe;
 using Messages;
 using UnityEngine;
@@ -6,10 +7,10 @@ using VContainer;
 
 public class PlayerStats : MonoBehaviour
 {
-    [SerializeField]
     private int _lives;
-
     private int _score;
+    
+    private IDataContainer _dataContainer;
     
     private IDisposable _enemyDiedSubscription;
     private IDisposable _outOfBoundsSubscription;
@@ -17,11 +18,14 @@ public class PlayerStats : MonoBehaviour
     private IPublisher<LivesUpdatedMessage> _livesPublisher;
 
     [Inject]
-    private void Construct(ISubscriber<EnemyDiedMessage> enemyDiedSubscriber,
+    private void Construct(IDataContainer dataContainer
+        ,ISubscriber<EnemyDiedMessage> enemyDiedSubscriber,
         ISubscriber<OutOfBoundsMessage> outOfBoundsSubscriber,
         IPublisher<ScoreUpdatedMessage> scorePublisher,
         IPublisher<LivesUpdatedMessage> livesPublisher)
     {
+        _dataContainer = dataContainer;
+        
         _enemyDiedSubscription = enemyDiedSubscriber.Subscribe(message => UpdateScore(message.Points));
         _outOfBoundsSubscription = outOfBoundsSubscriber.Subscribe(_ => DecreaseLives());
         
@@ -31,7 +35,11 @@ public class PlayerStats : MonoBehaviour
 
     private void Start()
     {
+        _lives = _dataContainer.GetLives();
+        _score = _dataContainer.GetScore();
+        
         _livesPublisher.Publish(new LivesUpdatedMessage(_lives));
+        _scorePublisher.Publish(new ScoreUpdatedMessage(_score));
     }
 
     private void DecreaseLives()

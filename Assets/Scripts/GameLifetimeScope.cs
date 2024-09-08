@@ -9,6 +9,8 @@ public class GameLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.Register<InputHandler>(Lifetime.Singleton);
+        builder.Register<PrefsManager>(Lifetime.Singleton)
+            .AsImplementedInterfaces();
         builder.RegisterInstance(_playerController)
             .AsImplementedInterfaces();
         

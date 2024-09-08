@@ -4,6 +4,6 @@ public static class GlobalConstants
     public const string OUTER_BOUND = "OuterBound";
 
     public const string MAIN_MENU_SCENE_NAME = "MainMenu";
-    public const string LEVEL_SCENE_NAME = "Level";
+    public const string LEVEL_SCENE_NAME = "Level_1";
     public const string TUTORIAL_SCENE_NAME = "Tutorial";
 }
