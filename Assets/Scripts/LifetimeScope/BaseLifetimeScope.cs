@@ -1,24 +1,18 @@
 using MessagePipe;
-using ScriptableObjects;
-using UnityEngine;
 using VContainer;
-using VContainer.Unity;
 
-namespace UI.MainMenuScreen
+namespace LifetimeScope
 {
-    public class MainMenuLifetimeScope : LifetimeScope
+    public abstract class BaseLifetimeScope : VContainer.Unity.LifetimeScope
     {
-        [SerializeField] private GameData _newGameData;
-        
         protected override void Configure(IContainerBuilder builder)
         {
             builder.Register<PrefsManager>(Lifetime.Singleton)
                 .AsImplementedInterfaces();
-            builder.RegisterInstance(_newGameData);
             
             RegisterMessagePipe(builder);
         }
-        
+
         private void RegisterMessagePipe(IContainerBuilder builder)
         {
             builder.RegisterMessagePipe();
