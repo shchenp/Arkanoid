@@ -1,4 +1,3 @@
-using System;
 using MessagePipe;
 using Messages;
 using VContainer;
@@ -7,8 +6,6 @@ namespace UI.HUD
 {
     public class EnemyCounterView : Viewer
     {
-        private IDisposable _subscription;
-        
         [Inject]
         private void Construct(ISubscriber<EnemyCountUpdatedMessage> enemyCountSubscriber)
         {
@@ -18,11 +15,6 @@ namespace UI.HUD
         private void UpdateView(int alive, int total)
         {
             _value.text = $"{alive} / {total}";
-        }
-
-        private void OnDestroy()
-        {
-            _subscription?.Dispose();
         }
     }
 }
