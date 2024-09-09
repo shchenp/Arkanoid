@@ -2,7 +2,7 @@ namespace Interfaces
 {
     public interface IDataContainer
     {
-        bool HasData();
+        bool HasLevelData();
         
         string GetLevelName();
         

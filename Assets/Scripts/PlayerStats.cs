@@ -11,26 +11,31 @@ public class PlayerStats : MonoBehaviour
     private int _score;
     
     private IDataContainer _dataContainer;
-    
     private IDisposable _enemyDiedSubscription;
     private IDisposable _outOfBoundsSubscription;
+    private IDisposable _winGameSubscription;
     private IPublisher<ScoreUpdatedMessage> _scorePublisher;
     private IPublisher<LivesUpdatedMessage> _livesPublisher;
+    private IPublisher<GameOverMessage> _gameOverPublisher;
 
     [Inject]
-    private void Construct(IDataContainer dataContainer
-        ,ISubscriber<EnemyDiedMessage> enemyDiedSubscriber,
+    private void Construct(IDataContainer dataContainer,
+        ISubscriber<EnemyDiedMessage> enemyDiedSubscriber,
         ISubscriber<OutOfBoundsMessage> outOfBoundsSubscriber,
+        ISubscriber<LevelPassedMessage> winGameSubscriber,
         IPublisher<ScoreUpdatedMessage> scorePublisher,
-        IPublisher<LivesUpdatedMessage> livesPublisher)
+        IPublisher<LivesUpdatedMessage> livesPublisher,
+        IPublisher<GameOverMessage> gameOverPublisher)
     {
         _dataContainer = dataContainer;
         
         _enemyDiedSubscription = enemyDiedSubscriber.Subscribe(message => UpdateScore(message.Points));
         _outOfBoundsSubscription = outOfBoundsSubscriber.Subscribe(_ => DecreaseLives());
+        _winGameSubscription = winGameSubscriber.Subscribe(_ => SendGameOverMessage());
         
         _scorePublisher = scorePublisher;
         _livesPublisher = livesPublisher;
+        _gameOverPublisher = gameOverPublisher;
     }
 
     private void Start()
@@ -49,9 +54,13 @@ public class PlayerStats : MonoBehaviour
         
         if (_lives <= 0)
         {
-            // Game Over
-            Debug.Log("Game Over");
+            SendGameOverMessage();
         }
+    }
+
+    private void SendGameOverMessage()
+    {
+        _gameOverPublisher.Publish(new GameOverMessage(_score));
     }
 
     private void UpdateScore(int points)
@@ -65,5 +74,6 @@ public class PlayerStats : MonoBehaviour
     {
         _enemyDiedSubscription?.Dispose();
         _outOfBoundsSubscription?.Dispose();
+        _winGameSubscription?.Dispose();
     }
 }
