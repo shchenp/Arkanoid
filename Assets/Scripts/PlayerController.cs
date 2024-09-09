@@ -5,6 +5,7 @@ using VContainer;
 public class PlayerController : MonoBehaviour, IParent
 {
     [SerializeField] private float _speed;
+    [SerializeField] private float _bonusScaleMultiplicator;
     [SerializeField] private float _leftBorderX;
     [SerializeField] private float _rightBorderX;
     
@@ -22,6 +23,22 @@ public class PlayerController : MonoBehaviour, IParent
         
         nextPosition.x = Mathf.Clamp(nextPosition.x, _leftBorderX, _rightBorderX);
         transform.position = nextPosition;
+    }
+    
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag(GlobalConstants.BONUS_TAG))
+        {
+            IncreaseScale();
+        }
+    }
+
+    private void IncreaseScale()
+    {
+        var newScale = transform.localScale;
+        newScale.x *= _bonusScaleMultiplicator;
+
+        transform.localScale = newScale;
     }
 
     Transform IParent.GetTransform()

@@ -2,6 +2,7 @@ public static class GlobalConstants
 {
     public const string PLAYER_TAG = "Player";
     public const string OUTER_BOUND = "OuterBound";
+    public const string BONUS_TAG = "Bonus";
 
     public const string MAIN_MENU_SCENE_NAME = "MainMenu";
     public const string LEVEL_SCENE_NAME = "Level_1";
