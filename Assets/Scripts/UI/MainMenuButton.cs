@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -15,12 +16,6 @@ namespace UI
 
         private void LoadMainMenuScene()
         {
-            if (SceneManager.GetSceneByName(GlobalConstants.GAME_OVER_SCENE_NAME).isLoaded)
-            {
-                Debug.Log("Game Over Scene is loaded.");
-                SceneManager.UnloadSceneAsync(GlobalConstants.GAME_OVER_SCENE_NAME);
-            }
-            
             SceneManager.LoadSceneAsync(GlobalConstants.MAIN_MENU_SCENE_NAME);
         }
 

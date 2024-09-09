@@ -21,11 +21,7 @@ public class Enemy : MonoBehaviour
         if (--_health <= 0)
         {
             gameObject.SetActive(false);
+            _enemyDiedPublisher.Publish(new EnemyDiedMessage(_points));
         }
-    }
-
-    private void OnDisable()
-    {
-        _enemyDiedPublisher.Publish(new EnemyDiedMessage(_points));
     }
 }
